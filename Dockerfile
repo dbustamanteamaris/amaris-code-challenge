@@ -3,6 +3,8 @@ WORKDIR /app
 COPY package.json .
 RUN npm install
 COPY . .
+RUN chmod +x wait-for-it.sh
 RUN npx tsc
 EXPOSE 3000
-CMD ["node", "dist/index.js"]
+RUN apk add --no-cache netcat-openbsd
+CMD ["./wait-for-it.sh", "db:5432", "--", "npm", "start"]
